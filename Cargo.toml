@@ -1,0 +1,11 @@
+[package]
+name = "rustkatas"
+version = "0.1.0"
+authors = ["Tim Dalton <daltontf1212@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+bimap = "0.1.5" # bacon
+regex = "1"
+lazy_static = "1.4.0"
+num-traits = "0.2.14"
