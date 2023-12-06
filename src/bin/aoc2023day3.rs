@@ -30,6 +30,7 @@ fn sum_adjacent_numbers(
         }
         if has_adjacency {
             result += number_info.0;
+            println!("{} has adjacency", number_info.0);
         }
         result
     })
@@ -37,7 +38,7 @@ fn sum_adjacent_numbers(
 
 fn main() -> io::Result<()> {
     let number_re = Regex::new(r"(\d+)").unwrap();
-    let symbol_re = Regex::new(r"([\$#\+\*])").unwrap();
+    let symbol_re = Regex::new(r"([^\d\.\s])").unwrap();
 
     let mut row_symbols: BoundedVecDeque<Vec<usize>> = BoundedVecDeque::new(3);
     // Behave like a row of no symbols is before first row
@@ -48,11 +49,16 @@ fn main() -> io::Result<()> {
     for line in io::stdin().lock().lines() {
         let line_str = &line.unwrap();
 
-        row_symbols.push_back(symbol_re.captures_iter(&line_str)
-            .map(|symbol_capture| {
-                let capture: Match = symbol_capture.get(0).unwrap(); 
-                capture.start()    
-            }).collect());
+        row_symbols.push_back(
+            if symbol_re.is_match(&line_str) {
+                symbol_re.captures_iter(&line_str)
+                    .map(|symbol_capture| {
+                        let capture: Match = symbol_capture.get(0).unwrap(); 
+                        capture.start()    
+                    }).collect()
+            } else {
+                Vec::new() // no symbols on line
+            });
 
         result += sum_adjacent_numbers(&row_symbols, &last_numbers_row);
 
