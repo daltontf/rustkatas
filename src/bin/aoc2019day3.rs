@@ -1,4 +1,7 @@
+use std::io;
+
 #[derive(Copy, Clone, Debug)]
+
 enum Line {
     Horizontal(i32, i32, u32),
     Vertical(i32, i32, u32),
@@ -56,10 +59,10 @@ fn make_lines_for_path(path: Vec<&str>) -> Vec<Line> {
 fn main() {
     let mut answer: Option<(i32, i32)> = None;
 
-    let argv: Vec<String> = std::env::args().collect();
+    let mut lines = io::stdin().lines();
 
-    let lines1 = make_lines_for_path(argv[1].split(",").collect());
-    let lines2 = make_lines_for_path(argv[2].split(",").collect());
+    let lines1 = make_lines_for_path(lines.next().unwrap().unwrap().split(",").collect());
+    let lines2 = make_lines_for_path(lines.next().unwrap().unwrap().split(",").collect());
 
     for line1 in &lines1 {
         for line2 in &lines2 {
