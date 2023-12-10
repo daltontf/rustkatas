@@ -22,13 +22,12 @@ fn chain_tuples(tuples: &mut Vec<(i32, i32)>) -> bool {
             index += 1;
         }
     }
-    // second clause detects loop which means results based on input
-    tail + 1 == index && (tuple_count < 2 || tuples[tuple_count -1].1 != tuples[0].0)
+    tail + 1 == index 
 }
 
 
 fn main() {
-    let mut input:Vec<(i32, i32)> = vec![(23,4),(8,15),(16,4),(4,8),(15,16)];
+    let mut input:Vec<(i32, i32)> = vec![(4,8),(23,4),(8,15),(16,23),(4,8),(15,16)];
     
     println!("{:?}", input);
     
@@ -64,14 +63,16 @@ mod tests {
         test_valid(vec![(4,8),(23,42),(8,15),(16,23),(15,16)],
                     vec![(4,8),(8,15),(15,16),(16,23),(23,42)]);
         test_valid(vec![(4,8),(8,15),(15,16),(16,23),(23,42)],
-                    vec![(4,8),(8,15),(15,16),(16,23),(23,42)]);            
+                    vec![(4,8),(8,15),(15,16),(16,23),(23,42)]);  
+
+         // loops which makes output vary by input order
+         test_valid(vec![(23,4),(8,15),(16,23),(4,8),(15,16)],
+                    vec![(23, 4), (4, 8), (8, 15), (15, 16), (16, 4)]);          
     }
 
     #[test]
     fn no_bueno() {
         test_not_valid(vec![(23,42),(8,15)]);
-        test_not_valid(vec![(23,42),(8,15),(16,24),(4,8),(15,16)]);
-        // loops which makes output vary by input order
-        test_not_valid(vec![(23,4),(8,15),(16,23),(4,8),(15,16)]);
+        test_not_valid(vec![(23,42),(8,15),(16,24),(4,8),(15,16)]);       
     }
 }
