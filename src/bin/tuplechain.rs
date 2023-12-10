@@ -1,54 +1,38 @@
 
 fn chain_tuples(tuples: &mut Vec<(i32, i32)>) -> bool {
-    let mut head = tuples[0];
-    
-    let mut index = 1;
+     
     let tuple_count = tuples.len();
+    let mut tail = 0;
+    let mut index = 1;
     
-    let mut is_valid = true;
-    let mut swap_count = 1; // 1 less swap than tuples max 
-    
-    while index < tuple_count {
-        
-        let other_tuple = tuples[index];
-        if head.1 == other_tuple.0 {
+    while index < tuple_count {     
+        if tuples[index].0 == tuples[tail].1 {
             if index > 1 {
-                tuples.remove(index);
-                tuples.insert(1, other_tuple);
-                swap_count +=1;
+                let index_tuple = tuples.remove(index);
+                tuples.insert(tail + 1, index_tuple);
+                tail += 1;
+                index = tail + 1;
             } 
-        } else if other_tuple.1 == head.0 {
-            tuples.remove(index); 
-            tuples.insert(0, other_tuple);
-            head = other_tuple;
-            index = 0;
-            is_valid = true;
-            swap_count +=1;
-        } 
-        
-        if index + 1 < tuple_count {
-            is_valid &= tuples[index].1 == tuples[index + 1].0;
-        } 
-        
-        if swap_count > tuple_count {
-            is_valid = false;
-            break;
+        } else if tuples[index].1 == tuples[0].0 {
+            let index_tuple = tuples.remove(index); 
+            tuples.insert(0, index_tuple);
+            tail += 1;
+            index = tail + 1;
+        } else {
+            index += 1;
         }
-          
-        index += 1;
-            
     }
-
-    is_valid
+    // second clause detects loop which means results based on input
+    tail + 1 == index && (tuple_count < 2 || tuples[tuple_count -1].1 != tuples[0].0)
 }
 
 
 fn main() {
-    let mut input:Vec<(i32, i32)> = vec![(23,42),(8,15),(16,23),(4,8),(15,16)];
+    let mut input:Vec<(i32, i32)> = vec![(23,4),(8,15),(16,4),(4,8),(15,16)];
     
     println!("{:?}", input);
     
-    chain_tuples(&mut input);
+    println!("valid= {}", chain_tuples(&mut input));
 
     println!("{:?}", input);
 }
@@ -69,12 +53,25 @@ mod tests {
 
     #[test]
     fn happy_path() {
+        test_valid(vec![],
+                    vec![]);
+        test_valid(vec![(4,4)],
+                    vec![(4,4)]);
+        test_valid(vec![(15,16),(23,42),(8,15),(16,23),(4,8)],
+                    vec![(4,8),(8,15),(15,16),(16,23),(23,42)]);
         test_valid(vec![(23,42),(8,15),(16,23),(4,8),(15,16)],
                     vec![(4,8),(8,15),(15,16),(16,23),(23,42)]);
+        test_valid(vec![(4,8),(23,42),(8,15),(16,23),(15,16)],
+                    vec![(4,8),(8,15),(15,16),(16,23),(23,42)]);
+        test_valid(vec![(4,8),(8,15),(15,16),(16,23),(23,42)],
+                    vec![(4,8),(8,15),(15,16),(16,23),(23,42)]);            
     }
 
     #[test]
     fn no_bueno() {
+        test_not_valid(vec![(23,42),(8,15)]);
         test_not_valid(vec![(23,42),(8,15),(16,24),(4,8),(15,16)]);
+        // loops which makes output vary by input order
+        test_not_valid(vec![(23,4),(8,15),(16,23),(4,8),(15,16)]);
     }
 }
