@@ -24,12 +24,12 @@ fn start_beam(x: usize, y:usize, direction:&Direction, board:&Vec<Vec<char>>, be
     let mut new_direction = direction;
 
     loop {
-        let tile =  board[new_y][new_x];
-
         if beam_track[new_y][new_x] & new_direction.bits > 0 {
-            break;
+            break; // Detect loop using bitmap to see if visited in same direction
         } 
-        beam_track[new_y][new_x] |= new_direction.bits; 
+        beam_track[new_y][new_x] |= new_direction.bits;
+
+        let tile =  board[new_y][new_x]; 
 
         match (tile, new_direction,) {
             ('/', &Direction::EAST) => new_direction = &Direction::NORTH,
