@@ -21,7 +21,8 @@ fn execute(code_as_strings: Vec<&str>) -> Result<Vec<i32>, &str> {
                 code[target] = code[code[pc + 1] as usize] * code[code[pc + 2] as usize];
                 pc += 4;
             } else if code[pc] == 3 {
-                code[]
+                code[let target = code[pc + 3] as usize;
+                pc += 2;
             } else {
                 pc += 1;
             }

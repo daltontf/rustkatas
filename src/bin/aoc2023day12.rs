@@ -8,42 +8,65 @@ fn replace_at_index(input: &Vec<char>, index:usize, chr:char) -> Vec<char> {
     input.iter().enumerate().map(|(i, c)| if i == index { chr } else { *c }).collect()
 }
 
-fn expand_vectors(permutations:&mut Vec<Vec<char>>, input: &Vec<char>) {
-    for (index, chr) in input.iter().enumerate() {
+fn expand_vectors(match_count:&mut usize, input: &Vec<char>, start_index:usize, pattern_re:&regex::Regex) {
+    for (index, chr) in input.iter().enumerate().skip(start_index) {
         if *chr == '?' {
             let with_hash = replace_at_index(input, index, '#');
-            expand_vectors(permutations, &with_hash);
+            expand_vectors(match_count, &with_hash, index, pattern_re );
             let with_period = replace_at_index(input, index, '.');
-            expand_vectors(permutations, &with_period);
+            expand_vectors(match_count, &with_period, index, pattern_re);
             return
         }   
     }
-    permutations.push(input.to_vec());
+
+    let input_str =  input.into_iter().collect::<String>();
+
+    if pattern_re.is_match(&input_str) {
+        *match_count += 1;
+    }
+}
+
+fn multiply<T: Copy>(input: &Vec<T>, separator: T) -> Vec<T> {
+    input.iter()
+        .chain(Some(&separator).into_iter())
+        .chain(input.iter())
+        .chain(Some(&separator).into_iter())
+        .chain(input.iter())
+        .chain(Some(&separator).into_iter())
+        .chain(input.iter())
+        .chain(Some(&separator).into_iter())
+        .chain(input.iter())
+        .map(|chr| *chr).collect()
 }
 
 fn main() {
-    let result:usize = io::stdin().lock().lines().map(|line| {
+    let mut match_count: usize = 0;
+
+    for line in io::stdin().lock().lines() {
         let line_str = line.unwrap();
 
         let line_parts:Vec<&str> = line_str.split(' ').collect();
 
-        let input:Vec<char> = line_parts.get(0).unwrap().to_string().chars().collect();
-   
-        let pattern:String = format!("^\\.*{}\\.*$", line_parts.get(1).unwrap().split(",")
+        let input:Vec<char> = multiply(
+            &mut line_parts.get(0).unwrap().to_string().chars().collect(),
+            '?');
+
+        println!("{:?}", input);    
+
+        let pattern_str: String = line_parts.get(1).unwrap().to_string();
+
+        let pattern = format!("{},{},{},{},{}", pattern_str, pattern_str, pattern_str, pattern_str, pattern_str); 
+      
+        println!("{}", pattern);     
+
+        let pattern:String = format!("^\\.*{}\\.*$", pattern.split(",")
             .map(|chr| format!("#{{{}}}", chr))
             .collect::<Vec<String>>().join("\\.+"));
    
-        let pattern_re = regex::Regex::new(&pattern).unwrap();
-       
-        let mut permutations: Vec<Vec<char>> = Vec::new();
+        let pattern_re = regex::Regex::new(&pattern).unwrap();         
    
-        expand_vectors(&mut permutations, &input);
-   
-        permutations.iter().filter(|p| {
-            let pstring = p.into_iter().collect::<String>();
-            pattern_re.is_match(&pstring)
-        }).count()
-    }).fold(0, |mut sum, value| { sum += value; sum });
+        expand_vectors(&mut match_count, &input, 0, &pattern_re);
+    }
 
-    println!("result = {}", result);
+    println!("result = {}", match_count);
 }

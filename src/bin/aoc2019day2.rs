@@ -29,9 +29,12 @@ fn execute(code_as_strings: Vec<&str>) -> Result<Vec<i32>, &str> {
 }
 
 fn main() {
-    let argv: Vec<String> = std::env::args().collect();
+    let args: Vec<String> = std::env::args().collect();
 
-    let result = execute(argv[1].split(",").collect());
+    let file = File::open(&args[1]).unwrap();
+
+    let result = execute(file.lines()
+        .flat_map(|line| line.unwrap().parse::<i32>()));
 
     println!("{:?}", result);
 }
