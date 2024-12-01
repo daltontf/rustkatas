@@ -89,28 +89,28 @@ impl State2 {
         self.past_lines.push(new_line);
 
         self
-
     }
 
     fn find_intersection(&self) -> &Line {
         for other in self.past_lines {
-        match (&self, line2) {
-            (Line::Horizontal(xh, yh, deltah), Line::Vertical(xv, yv, deltav))
-          | (Line::Vertical(xv, yv, deltav), Line::Horizontal(xh, yh, deltah)) => {
-                if (xh <= xv)
-                    && (xv <= (xh + deltah as i32))
-                    && (yv <= yh)
-                    && (yh <= (yv + deltav as i32))
-                {
-                    Some((xv, yh))
-                } else {
-                    None
+            match (&self, line2) {
+                (Line::Horizontal(xh, yh, deltah), Line::Vertical(xv, yv, deltav))
+              | (Line::Vertical(xv, yv, deltav), Line::Horizontal(xh, yh, deltah)) => {
+                    if (xh <= xv)
+                        && (xv <= (xh + deltah as i32))
+                        && (yv <= yh)
+                        && (yh <= (yv + deltav as i32))
+                    {
+                        Some((xv, yh))
+                    } else {
+                        None
+                    }
                 }
-            }
-            _ => None, // two horizontal or two vertical lines can't "cross" each other in this problem
+                _ => None, // two horizontal or two vertical lines can't "cross" each other in this problem
+            }   
         }
+    }   
     
-    }
 
     fn new() -> State2 {
         State2 {

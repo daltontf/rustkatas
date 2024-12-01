@@ -5,7 +5,6 @@ use regex::Regex;
 
 use std::cmp::min;
 
-
 fn main() {
     let re = Regex::new(r"^(\d+)x(\d+)x(\d+).*$").unwrap();
 

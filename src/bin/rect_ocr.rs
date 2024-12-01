@@ -1,5 +1,8 @@
 use std::io;
 
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
+
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 struct Rect {
     pub x: usize,
@@ -113,7 +116,12 @@ impl RectFinder {
 fn main() {
     let mut input = String::new();
     let mut finder = RectFinder::new();
-    while io::stdin().read_line(&mut input).is_ok() && input.len() > 0 {
+
+    let args: Vec<String> = std::env::args().collect();
+
+    let file = File::open(&args[1]).unwrap();
+
+    while BufReader::new(file).read_line(&mut input).is_ok() && input.len() > 0 {
         print!("{}", input);
         finder.process_line(input.as_str());
         input = String::new();

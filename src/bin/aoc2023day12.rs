@@ -1,6 +1,5 @@
-use std::io;
-
-use std::io::prelude::*;
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
 
 // TODO? Persistent Vectors
 
@@ -42,7 +41,11 @@ fn multiply<T: Copy>(input: &Vec<T>, separator: T) -> Vec<T> {
 fn main() {
     let mut match_count: usize = 0;
 
-    for line in io::stdin().lock().lines() {
+    let args: Vec<String> = std::env::args().collect();
+
+    let file = File::open(&args[1]).unwrap();
+    
+    for line in BufReader::new(file).lines() {
         let line_str = line.unwrap();
 
         let line_parts:Vec<&str> = line_str.split(' ').collect();

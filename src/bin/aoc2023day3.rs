@@ -1,10 +1,9 @@
-use std::io; 
-
 use ::bounded_vec_deque::BoundedVecDeque;
 
 use regex::{Regex, Match};
 
-use std::io::prelude::*;
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
 
 fn has_adjacent_number(
     symbol_indices: &Vec<usize>,
@@ -36,7 +35,7 @@ fn sum_adjacent_numbers(
     })
 }
 
-fn main() -> io::Result<()> {
+fn main() {
     let number_re = Regex::new(r"(\d+)").unwrap();
     let symbol_re = Regex::new(r"([^\d\.\s])").unwrap();
 
@@ -46,7 +45,11 @@ fn main() -> io::Result<()> {
 
     let mut result: u32 = 0;
 
-    for line in io::stdin().lock().lines() {
+    let args: Vec<String> = std::env::args().collect();
+
+    let file = File::open(&args[1]).unwrap();
+    
+    for line in BufReader::new(file).lines() {
         let line_str = &line.unwrap();
 
         row_symbols.push_back(
@@ -74,6 +77,4 @@ fn main() -> io::Result<()> {
     result += sum_adjacent_numbers(&row_symbols, &last_numbers_row);
 
     println!("Result = {}", result);
-
-    Ok(())
 }

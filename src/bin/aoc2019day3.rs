@@ -1,4 +1,5 @@
-use std::io;
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
 
 #[derive(Copy, Clone, Debug)]
 
@@ -59,7 +60,10 @@ fn make_lines_for_path(path: Vec<&str>) -> Vec<Line> {
 fn main() {
     let mut answer: Option<(i32, i32)> = None;
 
-    let mut lines = io::stdin().lines();
+    let args: Vec<String> = std::env::args().collect();
+    let file = File::open(&args[1]).unwrap();
+
+    let mut lines = BufReader::new(file).lines();
 
     let lines1 = make_lines_for_path(lines.next().unwrap().unwrap().split(",").collect());
     let lines2 = make_lines_for_path(lines.next().unwrap().unwrap().split(",").collect());

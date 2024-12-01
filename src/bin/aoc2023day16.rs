@@ -1,6 +1,5 @@
-use std::io;
-
-use std::io::prelude::*;
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
 
 use std::cmp::max;
 
@@ -99,7 +98,11 @@ fn part2(board:&Vec<Vec<char>>) {
 }
 
 fn main() {
-    let board:Vec<Vec<char>> = io::stdin().lock().lines().map(|line| {
+    let args: Vec<String> = std::env::args().collect();
+
+    let file = File::open(&args[1]).unwrap();
+
+    let board:Vec<Vec<char>> = BufReader::new(file).lines().map(|line| {
         line.unwrap().chars().collect()
     }).collect();
 

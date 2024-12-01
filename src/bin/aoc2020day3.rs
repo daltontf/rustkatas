@@ -1,17 +1,14 @@
-fn main() {
-    let pattern = vec!["..##.......",
-                                "#...#...#..",
-                                ".#....#..#.",
-                                "..#.#...#.#",
-                                ".#...##..#.",
-                                "..#.##.....",
-                                ".#.#.#....#",
-                                ".#........#",
-                                "#.##...#...",
-                                "#...##....#",
-                                ".#..#...#.#"];
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
 
-    let deltax = 1;
+fn main() {
+    let args: Vec<String> = std::env::args().collect();
+
+    let file = File::open(&args[1]).unwrap();
+    
+    let pattern: Vec<String> = BufReader::new(file).lines().map(|it| it.unwrap()).collect();
+
+    let deltax = 3;
     
     let mut x = 0;
     let mut y = 0;

@@ -63,10 +63,16 @@ impl OcrAnalysis {
 }
 
 fn main() {
+    let args: Vec<String> = std::env::args().collect();
+
+    let file = File::open(&args[1]).unwrap();
+    
+    let reader = BufReader::new(file);
+
     let lines: Vec<String> = (0..3)
         .map(|_| {
             let mut input = String::new();
-            io::stdin().read_line(&mut input).expect("");
+            reader.read_line(&mut input).expect("");
             input
         })
         .collect();

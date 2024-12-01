@@ -11,12 +11,12 @@ enum Oper {
 }
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
-
     let line_re = Regex::new(r"(toggle|turn off|turn on) (\d+),(\d+) through (\d+),(\d+)").unwrap();
 
+    let args: Vec<String> = std::env::args().collect();
+
     let file = File::open(&args[1]).unwrap();
-    
+   
     let matrix: Vec<Vec<bool>> = BufReader::new(file)
         .lines()
         .map(|line| line.unwrap())

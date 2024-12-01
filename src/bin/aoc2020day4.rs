@@ -1,9 +1,9 @@
-use std::io;
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
+use regex::RegexSet;
 
 #[macro_use]
 extern crate lazy_static;
-use regex::RegexSet;
-use std::io::prelude::*;
 
 fn find_passports(buffer: &String) {
     if buffer.len() > 0 {
@@ -28,10 +28,13 @@ fn find_passports(buffer: &String) {
     }
 }
 
-fn main() -> io::Result<()> {
+fn main() {
     let mut buffer = String::new();
 
-    for line in io::stdin().lock().lines() {
+    let args: Vec<String> = std::env::args().collect();
+    let file = File::open(&args[1]).unwrap();
+
+    for line in BufReader::new(file).lines() {
         let line_str = line.unwrap();
         if line_str.len() > 0 {
             buffer.push_str(line_str.as_str());
@@ -42,6 +45,4 @@ fn main() -> io::Result<()> {
         }
     }
     find_passports(&buffer);
-
-    Ok(())
 }

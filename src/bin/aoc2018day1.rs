@@ -15,10 +15,7 @@ fn main() {
             sum + value
         });
 
-    println!("part1_result = {}", part1_result);
-
-
-    
+    println!("part1_result = {}", part1_result);    
 
     let mut part2_result: Option<i32> = Option::None;
     let mut frequencies: HashSet<i32> = HashSet::new();
@@ -34,12 +31,12 @@ fn main() {
             freq += change;
             if frequencies.contains(&freq) {
                 part2_result = Some(freq);
+                break;
             } else {
                 frequencies.insert(freq);
             }
         }
-    }
-        
+    }        
 
     println!("part2_result = {}", part2_result.unwrap());
 

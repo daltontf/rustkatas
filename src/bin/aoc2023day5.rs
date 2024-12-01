@@ -1,6 +1,7 @@
 use std::io;
 
-use std::io::prelude::*;
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
 
 use regex::Regex;
 struct MapperEntry {
@@ -33,8 +34,12 @@ fn main() {
 
     let mut seeds: Vec<u64> = Vec::new();
     let mut mappers: Vec<Mapper> = Vec::new();
+    
+    let args: Vec<String> = std::env::args().collect();
 
-    for line in io::stdin().lock().lines() {
+    let file = File::open(&args[1]).unwrap();
+    
+    for line in BufReader::new(file).lines() {
         let line_str = &line.unwrap();
 
         for seed_capture in seed_re.captures_iter(&line_str) {

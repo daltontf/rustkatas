@@ -1,12 +1,15 @@
-use std::io;
-
-use std::io::prelude::*;
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
 
 fn main() {                 
 
-    let mut shifted:Vec<Vec<char>> = Vec::new();    
-    
-    for (row_index, row) in io::stdin().lock().lines().map(|row| row.unwrap() ).enumerate() {
+    let mut shifted:Vec<Vec<char>> = Vec::new();   
+
+    let args: Vec<String> = std::env::args().collect();
+
+    let file = File::open(&args[1]).unwrap();
+
+    for (row_index, row) in BufReader::new(file).lines().map(|row| row.unwrap() ).enumerate() {
         if row_index == 0 {
             shifted.push(row.chars().into_iter().collect());
         } else {

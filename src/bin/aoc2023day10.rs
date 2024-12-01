@@ -1,8 +1,7 @@
-use std::io;
-
 use std::cmp::max;
 
-use std::io::prelude::*;
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
 
 fn find_animal(board: &Vec<Vec<char>>) -> Option<(usize, usize)> {
     for (row_index, row) in board.iter().enumerate() {
@@ -54,7 +53,11 @@ fn mark_distances(location: &(usize, usize), distance: i32, board: &Vec<Vec<char
 
 
 fn main() {
-    let board:Vec<Vec<char>> = io::stdin().lock().lines().map(|line| {
+    let args: Vec<String> = std::env::args().collect();
+
+    let file = File::open(&args[1]).unwrap();
+   
+    let board:Vec<Vec<char>> = BufReader::new(file).lines().map(|line| {
         line.unwrap().chars().collect()
     }).collect();
 

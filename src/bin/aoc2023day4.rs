@@ -1,6 +1,5 @@
-use std::io;
-
-use std::io::prelude::*;
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
 
 use regex::Regex;
 
@@ -10,12 +9,16 @@ fn sort_captures(capture: &str) -> Vec<u32> {
     result
 }
 
-fn main() -> io::Result<()> {
+fn main() {
     let line_re = Regex::new(r"^Card\s+\d+:\s+(.*)\s+\|\s+(.*)\s*$").unwrap();
 
     let mut sum_total = 0u32;
 
-    for line in io::stdin().lock().lines() {
+    let args: Vec<String> = std::env::args().collect();
+
+    let file = File::open(&args[1]).unwrap();
+    
+    for line in BufReader::new(file).lines() {
         let line_str = &line.unwrap();
 
          for capture in line_re.captures_iter(line_str) { 
@@ -54,6 +57,4 @@ fn main() -> io::Result<()> {
 
     }
     println!("sum_total = {}", sum_total);
-
-    Ok(())
 }

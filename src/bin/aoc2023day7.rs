@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
-use std::io;
 
-use std::io::prelude::*;
+use std::fs::File;
+use std::io::{prelude::*, BufReader};
 
 use fancy_regex::Regex;
 
@@ -69,7 +69,11 @@ fn main() {
         (Regex::new(r"([2-9TJQKA])\1").unwrap(), HandType::OnePair)
     ];
 
-    let mut hands:Vec<(String, HandType, usize)> = io::stdin().lock().lines().map(|line| {
+    let args: Vec<String> = std::env::args().collect();
+
+    let file = File::open(&args[1]).unwrap();    
+
+    let mut hands:Vec<(String, HandType, usize)> = BufReader::new(file).lines().map(|line| {
         let line_str = &line.unwrap();
 
 

@@ -198,6 +198,9 @@ impl Engine {
         }
     }
 
+    fn clear_values(&mut self) {
+       self.value_map.clear();
+    }
 }
 
 fn main() {
@@ -251,6 +254,20 @@ fn main() {
             }
         }
 
+    let a = *engine.value_map.get("a").unwrap();
 
-    println!("a = {:?}", engine.value_map.get("a"));
+    println!("a = {:?}", a);
+
+    //engine.set_value("b", a);
+
+    //engine.clear_values();
+
+    engine.delete_output("b");
+
+    
+    engine.set_value("b", a);
+
+    println!("a = {:?}", *engine.value_map.get("a").unwrap());
+   
+    
 }
